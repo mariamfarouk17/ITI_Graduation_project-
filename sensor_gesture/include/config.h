@@ -73,11 +73,11 @@
  * once real sensors are integrated.
  * --------------------------------------------------------- */
 
-#define MOCK_THUMB_TEST_VALUE   300
-#define MOCK_INDEX_TEST_VALUE   700
-#define MOCK_MIDDLE_TEST_VALUE  650
-#define MOCK_RING_TEST_VALUE    400
-#define MOCK_PINKY_TEST_VALUE   200
+#define MOCK_THUMB_TEST_VALUE   100
+#define MOCK_INDEX_TEST_VALUE   100
+#define MOCK_MIDDLE_TEST_VALUE  100
+#define MOCK_RING_TEST_VALUE    100
+#define MOCK_PINKY_TEST_VALUE   100
 
 /* ---------------------------------------------------------
  * MOCK / TEMPORARY timing constant
@@ -88,5 +88,7 @@
  * --------------------------------------------------------- */
 
 #define GESTURE_DEBOUNCE_MS 50
+
+#define SENSOR_USE_MOCK 1
 
 #endif /* CONFIG_H */
