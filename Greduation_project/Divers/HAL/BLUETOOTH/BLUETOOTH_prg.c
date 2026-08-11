@@ -2,17 +2,17 @@
 
 void BLUETOOTH_Init(void)
 {
-	MUSART_vInit();
+    MUSART_vInit();
 }
 
 void BLUETOOTH_Transmit(u8 A_u8Byte)
 {
-	MUSART_vTransmit(1000);
+    MUSART_vTransmit(A_u8Byte);
 }
 
 u8 BLUETOOTH_Receive(void)
 {
-	return 	USART_Receive();
+    return MUSART_vReceive();
 }
 
 
