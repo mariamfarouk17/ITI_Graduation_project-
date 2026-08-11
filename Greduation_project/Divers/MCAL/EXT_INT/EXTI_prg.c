@@ -157,12 +157,3 @@ void MEXTI_vSetSenseControl(u8 A_u8InterruptNo, u8 A_u8SenseControl)
             break;
     }
 }
-
-
-
-
-void MEXTI_vSetSenseControl(u8 A_u8InterruptNo, u8 A_u8SenseControl)
-{
-
-}
-
