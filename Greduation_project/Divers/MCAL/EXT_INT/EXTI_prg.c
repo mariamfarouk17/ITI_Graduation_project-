@@ -11,89 +11,37 @@ static void (*G_EXTI_Callback[3])(void) = {NULL};
 
 
 
-void  MEXTI_vInit()
+void MEXTI_vInit(void)
 {
 #if EXTI_INT0_STATE == ENABLE
-#if EXTI_INT0_SENSE_CTRL == EXTI_FALLING
-	CLR_BIT(MCUCR,0);
-	SET_BIT(MCUCR,1);
+    MEXTI_vSetSenseControl(
+        EXTI_INT0_ID,
+        EXTI_INT0_SENSE_CTRL
+    );
 
-#elif EXTI_INT0_SENSE_CTRL == EXTI_RISING
-	SET_BIT(MCUCR,0);
-	SET_BIT(MCUCR,1);
-
-
-#elif EXTI_INT0_SENSE_CTRL == EXTI_LW_LVL
-	CLR_BIT(MCUCR,0);
-	CLR_BIT(MCUCR,1);
-
-
-
-#elif EXTI_INT0_SENSE_CTRL == EXTI_ONCHANGE
-	SET_BIT(MCUCR,0);
-	CLR_BIT(MCUCR,1);
-
-
-
-#else
-#error "sensing control not available"
+    SET_BIT(GICR, INT0);
 #endif
-	SET_BIT(GICR,6);
-#endif
-
-
 
 
 #if EXTI_INT1_STATE == ENABLE
-#if EXTI_INT1_SENSE_CTRL == EXTI_FALLING
-	CLR_BIT(MCUCR,2);
-	SET_BIT(MCUCR,3);
+    MEXTI_vSetSenseControl(
+        EXTI_INT1_ID,
+        EXTI_INT1_SENSE_CTRL
+    );
 
-#elif EXTI_INT1_SENSE_CTRL == EXTI_RISING
-	SET_BIT(MCUCR,2);
-	SET_BIT(MCUCR,3);
-
-
-#elif EXTI_INT1_SENSE_CTRL == EXTI_LW_LVL
-	CLR_BIT(MCUCR,2);
-	CLR_BIT(MCUCR,3);
-
-
-
-#elif EXTI_INT1_SENSE_CTRL == EXTI_ONCHANGE
-	SET_BIT(MCUCR,2);
-	CLR_BIT(MCUCR,3);
-
-
-#else
-#error "sensing control not available"
-
+    SET_BIT(GICR, INT1);
 #endif
-	SET_BIT(GICR,7);
-#endif
-
-
-
 
 
 #if EXTI_INT2_STATE == ENABLE
-#if EXTI_INT2_SENSE_CTRL == EXTI_FALLING
-	CLR_BIT(MCUCSR,6);
+    MEXTI_vSetSenseControl(
+        EXTI_INT2_ID,
+        EXTI_INT2_SENSE_CTRL
+    );
 
-
-#elif EXTI_INT2_SENSE_CTRL == EXTI_RISING
-	SET_BIT(MCUCSR,6);
-
-#else
-#error "sensing control not available"
-
+    SET_BIT(GICR, INT2);
 #endif
-	SET_BIT(GICR,5);
-#endif
-
-
 }
-
 
 void MEXTI_vCallBackFunction(void(*Fptr)(void) , u8 A_u8InterruptNo)
 {
@@ -129,6 +77,85 @@ void __vector_3(void)
 	{
 		G_EXTI_Callback[EXTI_INT2_ID]();
 	}
+}
+
+
+
+void MEXTI_vSetSenseControl(u8 A_u8InterruptNo, u8 A_u8SenseControl)
+{
+    switch(A_u8InterruptNo)
+    {
+        case EXTI_INT0_ID:
+
+            switch(A_u8SenseControl)
+            {
+                case EXTI_LOW_LVL:
+                    CLR_BIT(MCUCR, ISC00);
+                    CLR_BIT(MCUCR, ISC01);
+                    break;
+
+                case EXTI_ONCHANGE:
+                    SET_BIT(MCUCR, ISC00);
+                    CLR_BIT(MCUCR, ISC01);
+                    break;
+
+                case EXTI_FALLING:
+                    CLR_BIT(MCUCR, ISC00);
+                    SET_BIT(MCUCR, ISC01);
+                    break;
+
+                case EXTI_RISING:
+                    SET_BIT(MCUCR, ISC00);
+                    SET_BIT(MCUCR, ISC01);
+                    break;
+            }
+
+            break;
+
+
+        case EXTI_INT1_ID:
+
+            switch(A_u8SenseControl)
+            {
+                case EXTI_LOW_LVL:
+                    CLR_BIT(MCUCR, ISC10);
+                    CLR_BIT(MCUCR, ISC11);
+                    break;
+
+                case EXTI_ONCHANGE:
+                    SET_BIT(MCUCR, ISC10);
+                    CLR_BIT(MCUCR, ISC11);
+                    break;
+
+                case EXTI_FALLING:
+                    CLR_BIT(MCUCR, ISC10);
+                    SET_BIT(MCUCR, ISC11);
+                    break;
+
+                case EXTI_RISING:
+                    SET_BIT(MCUCR, ISC10);
+                    SET_BIT(MCUCR, ISC11);
+                    break;
+            }
+
+            break;
+
+
+        case EXTI_INT2_ID:
+
+            switch(A_u8SenseControl)
+            {
+                case EXTI_FALLING:
+                    CLR_BIT(MCUCSR, ISC2);
+                    break;
+
+                case EXTI_RISING:
+                    SET_BIT(MCUCSR, ISC2);
+                    break;
+            }
+
+            break;
+    }
 }
 
 
