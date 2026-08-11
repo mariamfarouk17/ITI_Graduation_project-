@@ -67,11 +67,7 @@ void MDIO_vSetPinDir(
 }
 
 
-void MDIO_vSetPinVal(
-    u8 A_u8PortNo,
-    u8 A_u8PinNo,
-    u8 A_u8PinVal
-)
+void MDIO_vSetPinVal( u8 A_u8PortNo,  u8 A_u8PinNo, u8 A_u8PinVal )
 {
     switch (A_u8PortNo)
     {

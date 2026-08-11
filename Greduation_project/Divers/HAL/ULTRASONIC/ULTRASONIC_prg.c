@@ -1,3 +1,11 @@
+/*
+ * ULTRASONIC_prg.c
+ *
+ *  Created on: 11 Aug 2026
+ *      Author: LOQ
+ */
+
+
 #include "../../LIB/STD_TYPES.h"
 #include "../../MCAL/DIO/DIO_int.h"
 #include "../../MCAL/EXT_INT/EXTI_int.h"
@@ -25,15 +33,12 @@ static volatile u32 G_u32EchoTime = 0;
 
 static void HULTRASONIC_vTrigger(void)
 {
-    DIO_SetPinValue(
-        ULTRASONIC_TRIGGER_PORT,
-        ULTRASONIC_TRIGGER_PIN,
-        DIO_HIGH
-    );
+	MDIO_vSetPinVal(ULTRASONIC_ECHO_PORT, ULTRASONIC_TRIGGER_PIN, DIO_HIGH);
+
 
     _delay_us(10);
 
-    DIO_SetPinValue(
+    MDIO_vSetPinVal(
         ULTRASONIC_TRIGGER_PORT,
         ULTRASONIC_TRIGGER_PIN,
         DIO_LOW
@@ -128,20 +133,20 @@ static void HULTRASONIC_vEchoCallback(void)
 void HULTRASONIC_vInit(void)
 {
     /* Trigger pin */
-    DIO_SetPinDirection(
+    MDIO_vSetPinDir(
         ULTRASONIC_TRIGGER_PORT,
         ULTRASONIC_TRIGGER_PIN,
         DIO_OUTPUT
     );
 
-    DIO_SetPinValue(
+    MDIO_vSetPinVal(
         ULTRASONIC_TRIGGER_PORT,
         ULTRASONIC_TRIGGER_PIN,
         DIO_LOW
     );
 
     /* Echo pin */
-    DIO_SetPinDirection(
+    MDIO_vSetPinDir(
         ULTRASONIC_ECHO_PORT,
         ULTRASONIC_ECHO_PIN,
         DIO_INPUT
@@ -185,8 +190,5 @@ u16 HULTRASONIC_u16GetDistance(void)
      */
     return (u16)(G_u32EchoTime / 58UL);
 }
-
-
-
 
 

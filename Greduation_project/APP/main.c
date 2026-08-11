@@ -6,11 +6,11 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
-
-#include "Divers/LIB/STD_TYPES.h"
-#include "Divers/HAL/L298/L298_int.h"
-#include "Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
-#include "Divers/HAL/ULTRASONIC/ULTRASONIC_int.h"
+#include "../Divers/MCAL/DIO/DIO_int.h"
+#include "../Divers/LIB/STD_TYPES.h"
+#include "../Divers/HAL/L298/L298_int.h"
+#include "../Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
+#include "../Divers/HAL/ULTRASONIC/ULTRASONIC_int.h"
 
 volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
 

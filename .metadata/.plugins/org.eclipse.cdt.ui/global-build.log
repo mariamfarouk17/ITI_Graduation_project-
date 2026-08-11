@@ -1,0 +1,37 @@
+14:11:32 **** Incremental Build of configuration Debug for project Greduation_project ****
+make all 
+Building file: ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/HAL/ULTRASONIC/ULTRASONIC_prg.d" -MT"Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o" -c -o "Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o" "../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c"
+In file included from ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c:14:
+c:/users/loq/desktop/iti/imt_sdk_win_64/imt_sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c
+ 
+Building target: Greduation_project.elf
+Invoking: AVR C Linker
+avr-gcc -Wl,-Map,Greduation_project.map -mmcu=atmega32 -o "Greduation_project.elf"  ./Divers/MCAL/WDT/WDT_prg.o  ./Divers/MCAL/USART/USART_prg.o  ./Divers/MCAL/TIMER/TMR_prg.o  ./Divers/MCAL/GIE/GIE_prg.o  ./Divers/MCAL/EXT_INT/EXTI_prg.o  ./Divers/MCAL/DIO/DIO_prg.o  ./Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o  ./Divers/HAL/L298/L298_prg.o  ./Divers/HAL/DC/DC_prg.o  ./Divers/HAL/BLUETOOTH/BLUETOOTH_prg.o  ./APP/main.o  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o   
+Finished building target: Greduation_project.elf
+ 
+Invoking: AVR Create Extended Listing
+avr-objdump -h -S Greduation_project.elf  >"Greduation_project.lss"
+Finished building: Greduation_project.lss
+ 
+Create Flash image (ihex format)
+avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Greduation_project.elf  "Greduation_project.hex"
+Finished building: Greduation_project.hex
+ 
+Invoking: Print Size
+avr-size --format=avr --mcu=atmega32 Greduation_project.elf
+AVR Memory Usage
+----------------
+Device: atmega32
+
+Program:   10882 bytes (33.2% Full)
+(.text + .data + .bootloader)
+
+Data:         45 bytes (2.2% Full)
+(.data + .bss + .noinit)
+
+
+Finished building: sizedummy
+ 

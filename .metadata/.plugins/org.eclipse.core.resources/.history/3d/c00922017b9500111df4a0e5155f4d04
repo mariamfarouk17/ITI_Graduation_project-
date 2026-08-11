@@ -1,0 +1,192 @@
+#include "../../LIB/STD_TYPES.h"
+#include "../../MCAL/DIO/DIO_int.h"
+#include "../../MCAL/EXT_INT/EXTI_int.h"
+#include "../../MCAL/TIMER/TMR_int.h"
+
+#include <util/delay.h>
+
+#include "ULTRASONIC_int.h"
+#include "ULTRASONIC_cfg.h"
+
+
+/* -------------------------------------------------- */
+/*                  Global Variables                  */
+/* -------------------------------------------------- */
+
+static volatile u8  G_u8EchoState = 0;
+static volatile u8  G_u8MeasurementReady = 0;
+
+static volatile u32 G_u32EchoTime = 0;
+
+
+/* -------------------------------------------------- */
+/*              Ultrasonic Trigger                   */
+/* -------------------------------------------------- */
+
+static void HULTRASONIC_vTrigger(void)
+{
+    DIO_SetPinValue(
+        ULTRASONIC_TRIGGER_PORT,
+        ULTRASONIC_TRIGGER_PIN,
+        DIO_HIGH
+    );
+
+    _delay_us(10);
+
+    DIO_SetPinValue(
+        ULTRASONIC_TRIGGER_PORT,
+        ULTRASONIC_TRIGGER_PIN,
+        DIO_LOW
+    );
+}
+
+
+/* -------------------------------------------------- */
+/*              Echo Callback                        */
+/* -------------------------------------------------- */
+
+static void HULTRASONIC_vEchoCallback(void)
+{
+    u16 Local_u16TimerValue;
+    u16 Local_u16OverflowCount;
+
+    /*
+     * First interrupt:
+     * Echo became HIGH
+     */
+    if(G_u8EchoState == 0)
+    {
+        /* Reset Timer2 */
+        MTIMERS_vStopTimer(TIM_2);
+
+        MTIMERS_vSetPreloadValue(TIM_2, 0);
+
+        MTIMERS_vResetOverflowCount(TIM_2);
+
+        /* Start measuring Echo HIGH time */
+        MTIMERS_vStartTimer(TIM_2);
+
+        /* Next interrupt should be Falling Edge */
+        MEXTI_vSetSenseControl(
+            EXTI_INT1_ID,
+            EXTI_FALLING
+        );
+
+        G_u8EchoState = 1;
+    }
+
+    /*
+     * Second interrupt:
+     * Echo became LOW
+     */
+    else
+    {
+        /* Stop Timer2 */
+        MTIMERS_vStopTimer(TIM_2);
+
+        /* Get Timer2 current value */
+        Local_u16TimerValue =
+            MTIMERS_u16GetTimerValue(TIM_2);
+
+        /* Get number of overflows */
+        Local_u16OverflowCount =
+            MTIMERS_u16GetOverflowCount(TIM_2);
+
+        /*
+         * Since:
+         *
+         * F_CPU = 8 MHz
+         * Prescaler = 8
+         *
+         * 1 Timer tick = 1 us
+         *
+         * Total time =
+         * (OverflowCount * 256) + TCNT2
+         */
+        G_u32EchoTime =
+            ((u32)Local_u16OverflowCount * 256UL)
+            + Local_u16TimerValue;
+
+        /* Measurement is ready */
+        G_u8MeasurementReady = 1;
+
+        /* Prepare for next measurement */
+        MEXTI_vSetSenseControl(
+            EXTI_INT1_ID,
+            EXTI_RISING
+        );
+
+        G_u8EchoState = 0;
+    }
+}
+
+
+/* -------------------------------------------------- */
+/*                    Init                           */
+/* -------------------------------------------------- */
+
+void HULTRASONIC_vInit(void)
+{
+    /* Trigger pin */
+    DIO_SetPinDirection(
+        ULTRASONIC_TRIGGER_PORT,
+        ULTRASONIC_TRIGGER_PIN,
+        DIO_OUTPUT
+    );
+
+    DIO_SetPinValue(
+        ULTRASONIC_TRIGGER_PORT,
+        ULTRASONIC_TRIGGER_PIN,
+        DIO_LOW
+    );
+
+    /* Echo pin */
+    DIO_SetPinDirection(
+        ULTRASONIC_ECHO_PORT,
+        ULTRASONIC_ECHO_PIN,
+        DIO_INPUT
+    );
+
+    /* Initial EXTI configuration */
+    MEXTI_vSetSenseControl(
+        EXTI_INT1_ID,
+        EXTI_RISING
+    );
+
+    /* Register Echo callback */
+    MEXTI_vCallBackFunction(
+        HULTRASONIC_vEchoCallback,
+        EXTI_INT1_ID
+    );
+}
+
+
+/* -------------------------------------------------- */
+/*                Get Distance                       */
+/* -------------------------------------------------- */
+
+u16 HULTRASONIC_u16GetDistance(void)
+{
+    G_u8MeasurementReady = 0;
+
+    /* Send Trigger pulse */
+    HULTRASONIC_vTrigger();
+
+    /* Wait until Echo measurement finishes */
+    while(G_u8MeasurementReady == 0)
+    {
+        /* Waiting */
+    }
+
+    /*
+     * Distance in cm:
+     *
+     * Distance = Time / 58
+     */
+    return (u16)(G_u32EchoTime / 58UL);
+}
+
+
+
+
+

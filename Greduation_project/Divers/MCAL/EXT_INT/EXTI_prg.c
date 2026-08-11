@@ -130,3 +130,12 @@ void __vector_3(void)
 		G_EXTI_Callback[EXTI_INT2_ID]();
 	}
 }
+
+
+
+
+void MEXTI_vSetSenseControl(u8 A_u8InterruptNo, u8 A_u8SenseControl)
+{
+
+}
+
