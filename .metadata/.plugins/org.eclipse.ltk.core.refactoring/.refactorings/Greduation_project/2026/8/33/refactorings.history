@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename resource &apos;Greduation_project/Ddivers&apos; to &apos;Divers&apos;" description="Rename resource &apos;Ddivers&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Ddivers" name="Divers" stamp="1786363655647" updateReferences="true"/>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;Greduation_project/Ddivers&apos; to &apos;Divers&apos;" description="Rename resource &apos;Ddivers&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Ddivers" name="Divers" stamp="1786363655647" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;Greduation_project/Divers/HAL/L298/L298_cfg&apos; to &apos;L298_cfg.h&apos;" description="Rename resource &apos;L298_cfg&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Divers/HAL/L298/L298_cfg" name="L298_cfg.h" stamp="1786436149882" updateReferences="true"/>
 </session>

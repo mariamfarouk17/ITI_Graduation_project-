@@ -5,8 +5,8 @@
 #define TIMER0_STATE				ENABLE
 #define TIMER1_STATE				ENABLE
 
-#define TIMER0_MODE					FAST_PWM
-#define TIMER1_MODE					FAST_PWM
+#define TIMER0_MODE					CTC
+#define TIMER1_MODE					ICU
 
 
 // CONFIGURE PRESCALLER

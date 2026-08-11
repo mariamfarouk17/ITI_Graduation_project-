@@ -1,0 +1,19 @@
+/*
+ * L298_cfg.h
+ *
+ *  Created on: 11 Aug 2026
+ *      Author: LOQ
+ */
+
+#ifndef DIVERS_HAL_L298_L298_CFG_H_
+#define DIVERS_HAL_L298_L298_CFG_H_
+
+#define IN1   DIO_PIN4
+#define IN2   DIO_PIN5
+#define IN3   DIO_PIN6
+#define IN4   DIO_PIN7
+
+#define ENA   DIO_PIN3
+#define ENB   DIO_PIN2
+
+#endif /* DIVERS_HAL_L298_L298_CFG_H_ */
