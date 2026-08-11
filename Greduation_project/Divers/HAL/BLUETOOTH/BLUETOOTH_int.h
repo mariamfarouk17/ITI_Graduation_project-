@@ -1,14 +1,11 @@
 #ifndef MCAL_BLUETOOTH_BLUETOOTH_INT_H_
 #define MCAL_BLUETOOTH_BLUETOOTH_INT_H_
 
-#include "../../LIB/std_types.h"
+#include "../../LIB/STD_TYPES.h"
 #include "../../MCAL/USART/USART_int.h"
 
-
 void BLUETOOTH_Init(void);
-
-
-void BLUETOOTH_TransmitChar(u8 A_u8Byte);
+void BLUETOOTH_Transmit(u8 A_u8Byte);
 
 
 
