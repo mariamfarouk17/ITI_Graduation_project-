@@ -8,6 +8,8 @@
 //Refers specifically to Output Compare Unit A of Timer1.
 #define TIM_1_A  2
 
+#define TIM_2   3
+
 #define ICU 4
 
 #define TRIG_TYPE_RISING  0
@@ -35,5 +37,10 @@ void MTIMERS_vSetICU_CB(void (*Fptr)(void));
 void MTIMERS_vEnableInterrupt(u8 A_u8TimerID, u8 A_u8TimerMode);
 void MTIMERS_vDisableInterrupt(u8 A_u8TimerID, u8 A_u8TimerMode);
 
+
+
+u16 MTIMERS_u16GetTimerValue(u8 A_u8TimerID);
+u16 MTIMERS_u16GetOverflowCount(u8 A_u8TimerID);
+void MTIMERS_vResetOverflowCount(u8 A_u8TimerID);
 
 #endif /* MCAL_TMR_TMR_INT_H_ */

@@ -1,0 +1,10 @@
+#ifndef HAL_ULTRASONIC_ULTRASONIC_INT_H_
+#define HAL_ULTRASONIC_ULTRASONIC_INT_H_
+
+#include "../../LIB/STD_TYPES.h"
+
+void HULTRASONIC_vInit(void);
+
+u16 HULTRASONIC_u16GetDistance(void);
+
+#endif /* HAL_ULTRASONIC_ULTRASONIC_INT_H_ */

@@ -17,6 +17,29 @@
 #define ICR1	*((volatile u16*)(0x46))
 
 
+
+
+//TIMER2
+
+#define TCCR2   *((volatile u8*)(0x45))
+#define TCNT2   *((volatile u8*)(0x44))
+#define OCR2    *((volatile u8*)(0x43))
+
+
+
+
+//TCCR2 BITS
+
+#define FOC2    7
+#define WGM20   6
+#define COM21   5
+#define COM20   4
+#define WGM21   3
+#define CS22    2
+#define CS21    1
+#define CS20    0
+
+
 //TCCR0 BITS
 #define	FOC0	7
 #define	WGM00	6

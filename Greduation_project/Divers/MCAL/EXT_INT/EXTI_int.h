@@ -40,6 +40,7 @@
 
 void MEXTI_vInit(void);
 void MEXTI_vCallBackFunction(void (*Fptr)(void),u8 A_u8InterruptNo);
+void MEXTI_vSetSenseControl(u8 A_u8InterruptNo, u8 A_u8SenseControl);
 
 
 #endif

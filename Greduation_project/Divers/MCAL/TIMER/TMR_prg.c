@@ -5,14 +5,17 @@
 #include "TMR_prv.h"
 #include "TMR_cfg.h"
 
-// Callback function pointer.
-static void (*G_TIMER_OVF_CB)(void) = {NULL};
-static void (*G_TIMER_CTC_CB)(void) = {NULL};
+/* Callback function pointers */
+static void (*G_TIMER_OVF_CB)(void) = NULL;
+static void (*G_TIMER_CTC_CB)(void) = NULL;
+static void (*G_TIMER_ICU_CB)(void) = NULL;
+static void (*G_TIMER2_OVF_CB)(void) = NULL;
 
-static void (*G_TIMER_ICU_CB)(void) = {NULL};
+static u8  G_u8Time0Preload = 0;
+static u32 G_32IntervalCount = 0;
 
-static u8 G_u8Time0Preload=0;
-static  u32 G_32IntervalCount=0;
+/* Timer2 overflow counter */
+static volatile u16 G_u16Timer2OverflowCount = 0;
 
 void MTIMERS_vInit(void)
 {
@@ -92,6 +95,57 @@ void MTIMERS_vInit(void)
 
 #endif
 
+#if TIMER2_STATE == ENABLE
+
+#if TIMER2_MODE == NORMAL_OVERFLOW
+
+CLR_BIT(TCCR2, WGM21);
+CLR_BIT(TCCR2, WGM20);
+
+#elif TIMER2_MODE == CTC
+
+SET_BIT(TCCR2, WGM21);
+CLR_BIT(TCCR2, WGM20);
+
+#elif TIMER2_MODE == PWM_PHASE_CORRECT
+
+CLR_BIT(TCCR2, WGM21);
+SET_BIT(TCCR2, WGM20);
+
+#elif TIMER2_MODE == FAST_PWM
+
+SET_BIT(TCCR2, WGM21);
+SET_BIT(TCCR2, WGM20);
+
+#else
+
+#error "Incorrect Timer2 mode"
+
+#endif
+
+
+#if INTERRUPT_CONTROL == ENABLE
+
+MTIMERS_vEnableInterrupt(TIM_2, TIMER2_MODE);
+
+#elif INTERRUPT_CONTROL == DISABLE
+
+MTIMERS_vDisableInterrupt(TIM_2, TIMER2_MODE);
+
+#else
+
+#error "Incorrect interrupt configuration"
+
+#endif
+
+
+/* Stop Timer2 initially */
+
+CLR_BIT(TCCR2, CS20);
+CLR_BIT(TCCR2, CS21);
+CLR_BIT(TCCR2, CS22);
+
+#endif
 
 #if TIMER1_STATE == ENABLE
 
@@ -153,6 +207,10 @@ void MTIMERS_vStartTimer(u8 A_u8TimerID)
 		TCCR1B = (TCCR1B & 0xF8) | (0x07 & CLK_SELECT_PRESCALER_TIM1) ;
 
 	}
+	if(A_u8TimerID == TIM_2)
+	{
+    	TCCR2 =(TCCR2 & 0xF8) | (0x07 & CLK_SELECT_PRESCALER_TIM2);
+	}
 }
 void MTIMERS_vStopTimer(u8 A_u8TimerID)
 {
@@ -165,6 +223,10 @@ void MTIMERS_vStopTimer(u8 A_u8TimerID)
 		{
 			TCCR1B = (TCCR1B & 0xF8) | (0x07 & 0x00) ;
 		}
+	if(A_u8TimerID == TIM_2)
+	{
+    	TCCR2 =(TCCR2 & 0xF8) | (0x07 & 0x00);
+	}
 }
 
 //ovf
@@ -180,7 +242,13 @@ void MTIMERS_vSetPreloadValue(u8 A_u8TimerID , u16 A_u16Preload)
 	case TIM_1:
 		TCNT1 = A_u16Preload;
 		break;
+	
+
+	case TIM_2:
+        TCNT2 = (u8)A_u16Preload;
+        break;	
 	}
+	
 }
 
 //ctc
@@ -307,6 +375,49 @@ void MTIMERS_vSetICU_CB(void (*Fptr)(void))
 
 }
 
+u16 MTIMERS_u16GetTimerValue(u8 A_u8TimerID)
+{
+    switch(A_u8TimerID)
+    {
+        case TIM_0:
+            return TCNT0;
+
+        case TIM_1:
+            return TCNT1;
+
+        case TIM_2:
+            return TCNT2;
+
+        default:
+            return 0;
+    }
+}
+
+
+
+
+void MTIMERS_vResetOverflowCount(u8 A_u8TimerID)
+{
+    if(A_u8TimerID == TIM_2)
+    {
+        G_u16Timer2OverflowCount = 0;
+    }
+}
+
+
+
+
+u16 MTIMERS_u16GetOverflowCount(u8 A_u8TimerID)
+{
+    if(A_u8TimerID == TIM_2)
+    {
+        return G_u16Timer2OverflowCount;
+    }
+
+    return 0;
+}
+
+
 // tim0 overflow
 void __vector_11(void) __attribute__((signal));
 void __vector_11(void)
@@ -357,3 +468,20 @@ void __vector_6(void)
 		G_TIMER_ICU_CB();
 	}
 }
+
+
+void __vector_5(void) __attribute__((signal));
+
+void __vector_5(void)
+{
+    G_u16Timer2OverflowCount++;
+
+    if(G_TIMER2_OVF_CB != NULL)
+    {
+        G_TIMER2_OVF_CB();
+    }
+}
+
+
+
+
