@@ -10,6 +10,7 @@
 #include "Divers/LIB/STD_TYPES.h"
 #include "Divers/HAL/L298/L298_int.h"
 #include "Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
+#include "Divers/HAL/ULTRASONIC/ULTRASONIC_int.h"
 
 volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
 
@@ -64,6 +65,7 @@ int main(void)
 {
     BLUETOOTH_Init();
     L298_vInit();
+    HULTRASONIC_vInit();
     sei();
 
     L298_vMove(MOVE_STOP, 0u);
@@ -72,9 +74,29 @@ int main(void)
     {
         if (g_mode == 1)
         {
-            L298_vMove(MOVE_FORWARD, 100u);
-            _delay_ms(100);
+            u16 distance = HULTRASONIC_u16GetDistance();
+
+            if (distance > 20u)
+            {
+                L298_vMove(MOVE_FORWARD, 100u);
+            }
+            else
+            {
+                L298_vMove(MOVE_STOP, 0u);
+                _delay_ms(200);
+                L298_vMove(MOVE_BACKWARD, 80u);
+                _delay_ms(400);
+                L298_vMove(MOVE_LEFT, 80u);
+                _delay_ms(400);
+                L298_vMove(MOVE_STOP, 0u);
+            }
         }
+        else
+        {
+            L298_vMove(MOVE_STOP, 0u);
+        }
+
+        _delay_ms(50);
     }
 }
 
