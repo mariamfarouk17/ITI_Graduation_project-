@@ -1,13 +1,10 @@
-#ifndef IR_SENSOR_H_
-#define IR_SENSOR_H_
-
-#include "STD_TYPES.h"
-#include "DIO_interface.h"
+#ifndef IR_INT_H_
+#define IR_INT_H_
 
 #define IR_PORT    DIO_PORTA
 #define IR_PIN     DIO_PIN0
 
 void IR_Init(void);
-uint8_t IR_IsBlackLine(void);
+u8 IR_IsBlackLine(void);
 
 #endif

@@ -1,35 +1,84 @@
-09:54:11 **** Incremental Build of configuration Debug for project Greduation_project ****
+10:35:50 **** Build of configuration Debug for project Greduation_project ****
 make all 
+Building file: ../Divers/MCAL/WDT/WDT_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/MCAL/WDT/WDT_prg.d" -MT"Divers/MCAL/WDT/WDT_prg.o" -c -o "Divers/MCAL/WDT/WDT_prg.o" "../Divers/MCAL/WDT/WDT_prg.c"
+Finished building: ../Divers/MCAL/WDT/WDT_prg.c
+ 
+Building file: ../Divers/MCAL/USART/USART_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/MCAL/USART/USART_prg.d" -MT"Divers/MCAL/USART/USART_prg.o" -c -o "Divers/MCAL/USART/USART_prg.o" "../Divers/MCAL/USART/USART_prg.c"
+Finished building: ../Divers/MCAL/USART/USART_prg.c
+ 
+Building file: ../Divers/MCAL/TIMER/TMR_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/MCAL/TIMER/TMR_prg.d" -MT"Divers/MCAL/TIMER/TMR_prg.o" -c -o "Divers/MCAL/TIMER/TMR_prg.o" "../Divers/MCAL/TIMER/TMR_prg.c"
+Finished building: ../Divers/MCAL/TIMER/TMR_prg.c
+ 
+Building file: ../Divers/MCAL/GIE/GIE_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/MCAL/GIE/GIE_prg.d" -MT"Divers/MCAL/GIE/GIE_prg.o" -c -o "Divers/MCAL/GIE/GIE_prg.o" "../Divers/MCAL/GIE/GIE_prg.c"
+Finished building: ../Divers/MCAL/GIE/GIE_prg.c
+ 
+Building file: ../Divers/MCAL/EXT_INT/EXTI_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/MCAL/EXT_INT/EXTI_prg.d" -MT"Divers/MCAL/EXT_INT/EXTI_prg.o" -c -o "Divers/MCAL/EXT_INT/EXTI_prg.o" "../Divers/MCAL/EXT_INT/EXTI_prg.c"
+Finished building: ../Divers/MCAL/EXT_INT/EXTI_prg.c
+ 
+Building file: ../Divers/MCAL/DIO/DIO_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/MCAL/DIO/DIO_prg.d" -MT"Divers/MCAL/DIO/DIO_prg.o" -c -o "Divers/MCAL/DIO/DIO_prg.o" "../Divers/MCAL/DIO/DIO_prg.c"
+Finished building: ../Divers/MCAL/DIO/DIO_prg.c
+ 
+Building file: ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/HAL/ULTRASONIC/ULTRASONIC_prg.d" -MT"Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o" -c -o "Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o" "../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c"
+In file included from ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c:14:
+c:/users/loq/desktop/iti/imt_sdk_win_64/imt_sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c: In function 'HULTRASONIC_vInit':
+../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c:97: warning: implicit declaration of function 'MEXTI_vEnableInterrupt'
+Finished building: ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c
+ 
 Building file: ../Divers/HAL/L298/L298_prg.c
 Invoking: AVR Compiler
 avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/HAL/L298/L298_prg.d" -MT"Divers/HAL/L298/L298_prg.o" -c -o "Divers/HAL/L298/L298_prg.o" "../Divers/HAL/L298/L298_prg.c"
 Finished building: ../Divers/HAL/L298/L298_prg.c
  
+Building file: ../Divers/HAL/IR/IR_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/HAL/IR/IR_prg.d" -MT"Divers/HAL/IR/IR_prg.o" -c -o "Divers/HAL/IR/IR_prg.o" "../Divers/HAL/IR/IR_prg.c"
+Finished building: ../Divers/HAL/IR/IR_prg.c
+ 
+Building file: ../Divers/HAL/DC/DC_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/HAL/DC/DC_prg.d" -MT"Divers/HAL/DC/DC_prg.o" -c -o "Divers/HAL/DC/DC_prg.o" "../Divers/HAL/DC/DC_prg.c"
+Finished building: ../Divers/HAL/DC/DC_prg.c
+ 
+Building file: ../Divers/HAL/BLUETOOTH/BLUETOOTH_prg.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/HAL/BLUETOOTH/BLUETOOTH_prg.d" -MT"Divers/HAL/BLUETOOTH/BLUETOOTH_prg.o" -c -o "Divers/HAL/BLUETOOTH/BLUETOOTH_prg.o" "../Divers/HAL/BLUETOOTH/BLUETOOTH_prg.c"
+Finished building: ../Divers/HAL/BLUETOOTH/BLUETOOTH_prg.c
+ 
+Building file: ../APP/main.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"APP/main.d" -MT"APP/main.o" -c -o "APP/main.o" "../APP/main.c"
+In file included from ../APP/main.c:4:
+c:/users/loq/desktop/iti/imt_sdk_win_64/imt_sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../APP/main.c
+ 
+Building file: ../APP/test_motors.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"APP/test_motors.d" -MT"APP/test_motors.o" -c -o "APP/test_motors.o" "../APP/test_motors.c"
+Finished building: ../APP/test_motors.c
+ 
+Building file: ../.metadata/.plugins/org.eclipse.cdt.make.core/specs.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF".metadata/.plugins/org.eclipse.cdt.make.core/specs.d" -MT".metadata/.plugins/org.eclipse.cdt.make.core/specs.o" -c -o ".metadata/.plugins/org.eclipse.cdt.make.core/specs.o" "../.metadata/.plugins/org.eclipse.cdt.make.core/specs.c"
+Finished building: ../.metadata/.plugins/org.eclipse.cdt.make.core/specs.c
+ 
 Building target: Greduation_project.elf
 Invoking: AVR C Linker
-avr-gcc -Wl,-Map,Greduation_project.map -mmcu=atmega32 -o "Greduation_project.elf"  ./Divers/MCAL/WDT/WDT_prg.o  ./Divers/MCAL/USART/USART_prg.o  ./Divers/MCAL/TIMER/TMR_prg.o  ./Divers/MCAL/GIE/GIE_prg.o  ./Divers/MCAL/EXT_INT/EXTI_prg.o  ./Divers/MCAL/DIO/DIO_prg.o  ./Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o  ./Divers/HAL/L298/L298_prg.o  ./Divers/HAL/DC/DC_prg.o  ./Divers/HAL/BLUETOOTH/BLUETOOTH_prg.o  ./APP/main.o ./APP/test_motors.o  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o   
-Finished building target: Greduation_project.elf
- 
-Invoking: AVR Create Extended Listing
-avr-objdump -h -S Greduation_project.elf  >"Greduation_project.lss"
-Finished building: Greduation_project.lss
- 
-Create Flash image (ihex format)
-avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex Greduation_project.elf  "Greduation_project.hex"
-Finished building: Greduation_project.hex
- 
-Invoking: Print Size
-avr-size --format=avr --mcu=atmega32 Greduation_project.elf
-AVR Memory Usage
-----------------
-Device: atmega32
-
-Program:   11146 bytes (34.0% Full)
-(.text + .data + .bootloader)
-
-Data:         71 bytes (3.5% Full)
-(.data + .bss + .noinit)
-
-
-Finished building: sizedummy
- 
+avr-gcc -Wl,-Map,Greduation_project.map -mmcu=atmega32 -o "Greduation_project.elf"  ./Divers/MCAL/WDT/WDT_prg.o  ./Divers/MCAL/USART/USART_prg.o  ./Divers/MCAL/TIMER/TMR_prg.o  ./Divers/MCAL/GIE/GIE_prg.o  ./Divers/MCAL/EXT_INT/EXTI_prg.o  ./Divers/MCAL/DIO/DIO_prg.o  ./Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o  ./Divers/HAL/L298/L298_prg.o  ./Divers/HAL/IR/IR_prg.o  ./Divers/HAL/DC/DC_prg.o  ./Divers/HAL/BLUETOOTH/BLUETOOTH_prg.o  ./APP/main.o ./APP/test_motors.o  ./.metadata/.plugins/org.eclipse.cdt.make.core/specs.o   
+./Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o: In function `HULTRASONIC_vTrigger':
+c:/users/loq/desktop/iti/imt_sdk_win_64/imt_sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:151: undefined reference to `MEXTI_vEnableInterrupt'
+make: *** [Greduation_project.elf] Error 1
