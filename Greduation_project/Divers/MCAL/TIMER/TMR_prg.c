@@ -263,6 +263,10 @@ void MTIMERS_vSetCompareMatch(u8 A_u8TimerID , u16 A_u16OCR_val)
 	case TIM_1_A:
 		OCR1A = A_u16OCR_val;
 		break;
+
+	case TIM_1_B:
+		OCR1B = A_u16OCR_val;
+		break;
 	}
 }
 

@@ -20,9 +20,9 @@ volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
 #define MANUAL_SPEED 60u
 #define AUTO_SPEED   60u
 /* Per-wheel speeds (left is slightly lower) */
-#define MANUAL_SPEED_LEFT  (MANUAL_SPEED )
+#define MANUAL_SPEED_LEFT  (MANUAL_SPEED > 5u ? MANUAL_SPEED - 5u : 0u)
 #define MANUAL_SPEED_RIGHT (MANUAL_SPEED)
-#define AUTO_SPEED_LEFT    (AUTO_SPEED )
+#define AUTO_SPEED_LEFT    (AUTO_SPEED > 5u ? AUTO_SPEED - 5u : 0u)
 #define AUTO_SPEED_RIGHT   (AUTO_SPEED)
 
 ISR(USART_RXC_vect)
