@@ -1,0 +1,14 @@
+#include "IR_sensor.h"
+
+void IR_Init(void) {
+    MDIO_vSetPinDir(IR_PORT, IR_PIN, DIO_PORT_INPUT);
+    MDIO_vSetPinVal(IR_PORT, IR_PIN, DIO_HIGH); // Enable internal pull-up
+}
+
+uint8_t IR_IsBlackLine(void) {
+    // If pin reads LOW (0), return 1 (Black line detected)
+    if (MDIO_u8GETPinVal(IR_PORT, IR_PIN) == DIO_LOW) {
+        return 1;
+    }
+    return 0;
+}
