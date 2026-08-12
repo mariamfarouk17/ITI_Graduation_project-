@@ -180,7 +180,4 @@ u16 HULTRASONIC_u16GetDistance(void)
      *
      * Distance = Time / 58
      */
-    u16 Distance = (u16)(G_u32EchoTime / 58UL) ;
-
-    return Distance ;
-}
+    return ((u16)(G_u32EchoTime / 58UL));
