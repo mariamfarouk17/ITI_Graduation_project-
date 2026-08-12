@@ -18,8 +18,8 @@ void L298_vInit(void)
     MDIO_vSetPinDir(DIO_PORTB, IN3, DIO_OUTPUT);
     MDIO_vSetPinDir(DIO_PORTB, IN4, DIO_OUTPUT);
 
-    MDIO_vSetPinDir(DIO_PORTA, ENA, DIO_OUTPUT);
-    MDIO_vSetPinDir(DIO_PORTB, ENB, DIO_OUTPUT);
+    MDIO_vSetPinDir(DIO_PORTB, ENA, DIO_OUTPUT);
+    MDIO_vSetPinDir(DIO_PORTA, ENB, DIO_OUTPUT);
 
     MTIMERS_vInit();
     MTIMERS_vStartTimer(TIM_0);
