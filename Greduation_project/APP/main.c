@@ -19,11 +19,6 @@ volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
 
 #define MANUAL_SPEED 60u
 #define AUTO_SPEED   60u
-/* Per-wheel speeds (left is slightly lower) */
-#define MANUAL_SPEED_LEFT  (MANUAL_SPEED )
-#define MANUAL_SPEED_RIGHT (MANUAL_SPEED)
-#define AUTO_SPEED_LEFT    (AUTO_SPEED )
-#define AUTO_SPEED_RIGHT   (AUTO_SPEED)
 
 ISR(USART_RXC_vect)
 {
@@ -33,26 +28,26 @@ ISR(USART_RXC_vect)
     {
         case 'A':
             g_mode = 1;
-            L298_vMoveDualSpeed(MOVE_STOP, 0u, 0u);
+            L298_vMove(MOVE_STOP, 0u);
             break;
         case 'M':
             g_mode = 0;
-            L298_vMoveDualSpeed(MOVE_STOP, 0u, 0u);
+            L298_vMove(MOVE_STOP, 0u);
             break;
         case 'F':
-            if (g_mode == 0) L298_vMoveDualSpeed(MOVE_FORWARD, MANUAL_SPEED_LEFT, MANUAL_SPEED_RIGHT);
+            if (g_mode == 0) L298_vMove(MOVE_FORWARD, MANUAL_SPEED);
             break;
         case 'B':
-            if (g_mode == 0) L298_vMoveDualSpeed(MOVE_BACKWARD, MANUAL_SPEED_LEFT, MANUAL_SPEED_RIGHT);
+            if (g_mode == 0) L298_vMove(MOVE_BACKWARD, MANUAL_SPEED);
             break;
         case 'R':
-            if (g_mode == 0) L298_vMoveDualSpeed(MOVE_RIGHT, MANUAL_SPEED, (MANUAL_SPEED/2u));
+            if (g_mode == 0) L298_vMove(MOVE_RIGHT, MANUAL_SPEED);
             break;
         case 'L':
-            if (g_mode == 0) L298_vMoveDualSpeed(MOVE_LEFT, (MANUAL_SPEED/2u), MANUAL_SPEED);
+            if (g_mode == 0) L298_vMove(MOVE_LEFT, MANUAL_SPEED);
             break;
         case 'S':
-            if (g_mode == 0) L298_vMoveDualSpeed(MOVE_STOP, 0u, 0u);
+            if (g_mode == 0) L298_vMove(MOVE_STOP, 0u);
             break;
         default:
             break;
@@ -66,22 +61,23 @@ static void LineFollow_vUpdate(void)
 
     if (left == 0u && right == 0u)
     {
-        L298_vMoveDualSpeed(MOVE_STOP, 0u, 0u);
+       
+        L298_vMove(MOVE_STOP, 60u);
     }
     else if (left == 1u && right == 0u)
     {
         /* Left sensor sees black -> drifted right, correct left */
-        L298_vMoveDualSpeed(MOVE_LEFT, (AUTO_SPEED/2u), AUTO_SPEED);
+        L298_vMove(MOVE_LEFT, 60u);
     }
     else if (left == 0u && right == 1u)
     {
         /* Right sensor sees black -> drifted left, correct right */
-        L298_vMoveDualSpeed(MOVE_RIGHT, AUTO_SPEED, (AUTO_SPEED/2u));
+        L298_vMove(MOVE_RIGHT, 60u);
     }
     else /* left == 1 && right == 1 */
     {
-        /* Both sensors see black -> go forward */
-        L298_vMoveDualSpeed(MOVE_FORWARD, AUTO_SPEED_LEFT, AUTO_SPEED_RIGHT);
+        /* Both sensors see black -> stop or go straight */
+        L298_vMove(MOVE_FORWARD, 0u);
     }
 }
 
@@ -94,7 +90,7 @@ int main(void)
     IR_Init(IR_RIGHT_PORT, IR_RIGHT_PIN);
     sei();
 
-    L298_vMoveDualSpeed(MOVE_STOP, 0u, 0u);
+    L298_vMove(MOVE_STOP, 0u);
 
     while (1)
     {

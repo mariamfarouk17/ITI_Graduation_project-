@@ -18,7 +18,6 @@
 
 void L298_vInit(void);
 void L298_vMove(u8 Copy_u8Direction, u8 Copy_u8Speed);
-void L298_vMoveDualSpeed(u8 Copy_u8Direction, u8 Copy_u8SpeedLeft, u8 Copy_u8SpeedRight);
 void L298_vMoveForward(void);
 void L298_vStop(void);
 

@@ -5,12 +5,9 @@
 
 //TIMER ITSELF
 #define TIM_1	1
-#define TIM_1	2
-
-// Refers specifically to Output Compare Unit A of Timer1.
+//Refers specifically to Output Compare Unit A of Timer1.
 #define TIM_1_A  2
-// Refers specifically to Output Compare Unit B of Timer1.
-#define TIM_1_B  5
+
 #define TIM_2   3
 
 #define ICU 4
