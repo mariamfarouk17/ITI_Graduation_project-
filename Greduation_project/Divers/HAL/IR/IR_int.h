@@ -1,10 +1,10 @@
-#ifndef IR_INT_H_
-#define IR_INT_H_
+#ifndef IR_INT_H
+#define IR_INT_H
 
-#define IR_PORT    DIO_PORTA
-#define IR_PIN     DIO_PIN0
+#include "../../LIB/STD_TYPES.h"
+#include "../../MCAL/DIO/DIO_int.h"
 
-void IR_Init(void);
-u8 IR_IsBlackLine(void);
+void IR_Init(u8 port, u8 pin);
+u8   IR_IsBlackLine(u8 port, u8 pin);
 
 #endif

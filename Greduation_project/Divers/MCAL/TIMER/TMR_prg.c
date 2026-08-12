@@ -294,6 +294,20 @@ void MTIMERS_vEnableInterrupt(u8 A_u8TimerID, u8 A_u8TimerMode)
 		}
 	}
 
+	if(A_u8TimerID == TIM_2)
+	{
+		switch(A_u8TimerMode)
+		{
+		case NORMAL_OVERFLOW:
+			SET_BIT(TIMSK,6);
+			break;
+
+		case CTC:
+			SET_BIT(TIMSK,2);
+			break;
+		}
+	}
+
 }
 void MTIMERS_vDisableInterrupt(u8 A_u8TimerID, u8 A_u8TimerMode)
 {
@@ -320,6 +334,20 @@ void MTIMERS_vDisableInterrupt(u8 A_u8TimerID, u8 A_u8TimerMode)
 			case ICU:
 				CLR_BIT(TIMSK,5);
 				break;
+		}
+	}
+
+	if(A_u8TimerID == TIM_2)
+	{
+		switch(A_u8TimerMode)
+		{
+		case NORMAL_OVERFLOW:
+			CLR_BIT(TIMSK,6);
+			break;
+
+		case CTC:
+			CLR_BIT(TIMSK,2);
+			break;
 		}
 	}
 

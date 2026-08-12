@@ -25,8 +25,20 @@ static volatile u32 G_u32EchoTime = 0;
 
 static void HULTRASONIC_vTrigger(void)
 {
-MDIO_vSetPinVal(ULTRASONIC_ECHO_PORT, ULTRASONIC_ECHO_PIN, DIO_HIGH);
+    /* Ensure trigger pin is low before pulsing */
+    MDIO_vSetPinVal(
+        ULTRASONIC_TRIGGER_PORT,
+        ULTRASONIC_TRIGGER_PIN,
+        DIO_LOW
+    );
 
+    _delay_us(2);
+
+    MDIO_vSetPinVal(
+        ULTRASONIC_TRIGGER_PORT,
+        ULTRASONIC_TRIGGER_PIN,
+        DIO_HIGH
+    );
 
     _delay_us(10);
 
@@ -144,7 +156,9 @@ void HULTRASONIC_vInit(void)
         DIO_INPUT
     );
 
-    /* Initial EXTI configuration */
+    /* Initialize external interrupts and set initial sense control */
+    MEXTI_vInit();
+
     MEXTI_vSetSenseControl(
         EXTI_INT1_ID,
         EXTI_RISING
@@ -169,10 +183,17 @@ u16 HULTRASONIC_u16GetDistance(void)
     /* Send Trigger pulse */
     HULTRASONIC_vTrigger();
 
-    /* Wait until Echo measurement finishes */
-    while(G_u8MeasurementReady == 0)
+    /* Wait until Echo measurement finishes, with timeout */
+    u32 Local_u32Timeout = 0ul;
+    while((G_u8MeasurementReady == 0) && (Local_u32Timeout < 60000ul))
     {
-        /* Waiting */
+        Local_u32Timeout++;
+    }
+
+    if (G_u8MeasurementReady == 0)
+    {
+        /* No echo received; return 0 to indicate failure */
+        return 0u;
     }
 
     /*
@@ -180,7 +201,7 @@ u16 HULTRASONIC_u16GetDistance(void)
      *
      * Distance = Time / 58
      */
-    u16 Distance = (u16)(G_u32EchoTime / 58UL) ;
+    u16 Distance = (u16)(G_u32EchoTime / 58UL);
 
-    return Distance ;
+    return Distance;
 }

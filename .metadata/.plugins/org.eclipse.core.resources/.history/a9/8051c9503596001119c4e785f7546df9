@@ -10,10 +10,10 @@
 
 /* Define your two IR sensor pins here */
 #define IR_LEFT_PORT   DIO_PORTA
-#define IR_LEFT_PIN    DIO_PIN1
+#define IR_LEFT_PIN    DIO_PIN0
 
 #define IR_RIGHT_PORT  DIO_PORTA
-#define IR_RIGHT_PIN   DIO_PIN0
+#define IR_RIGHT_PIN   DIO_PIN1
 
 volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
 
@@ -59,7 +59,7 @@ static void LineFollow_vUpdate(void)
     if (left == 0u && right == 0u)
     {
         /* Both sensors on white -> go straight */
-        L298_vMove(MOVE_STOP, 60u);
+        L298_vMove(MOVE_FORWARD, 60u);
     }
     else if (left == 1u && right == 0u)
     {
@@ -74,7 +74,7 @@ static void LineFollow_vUpdate(void)
     else /* left == 1 && right == 1 */
     {
         /* Both on black: intersection / stop line -> stop */
-        L298_vMove(MOVE_FORWARD, 0u);
+        L298_vMove(MOVE_STOP, 0u);
     }
 }
 

@@ -1,11 +1,11 @@
-10:55:16 **** Incremental Build of configuration Debug for project Greduation_project ****
+12:08:23 **** Incremental Build of configuration Debug for project Greduation_project ****
 make all 
-Building file: ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c
+Building file: ../APP/main.c
 Invoking: AVR Compiler
-avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"Divers/HAL/ULTRASONIC/ULTRASONIC_prg.d" -MT"Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o" -c -o "Divers/HAL/ULTRASONIC/ULTRASONIC_prg.o" "../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c"
-In file included from ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c:6:
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega32 -DF_CPU=8000000UL -MMD -MP -MF"APP/main.d" -MT"APP/main.o" -c -o "APP/main.o" "../APP/main.c"
+In file included from ../APP/main.c:3:
 c:/users/loq/desktop/iti/imt_sdk_win_64/imt_sdk_win_64/winavr/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
-Finished building: ../Divers/HAL/ULTRASONIC/ULTRASONIC_prg.c
+Finished building: ../APP/main.c
  
 Building target: Greduation_project.elf
 Invoking: AVR C Linker
@@ -26,7 +26,7 @@ AVR Memory Usage
 ----------------
 Device: atmega32
 
-Program:   10746 bytes (32.8% Full)
+Program:   11504 bytes (35.1% Full)
 (.text + .data + .bootloader)
 
 Data:         45 bytes (2.2% Full)
@@ -36,5 +36,5 @@ Data:         45 bytes (2.2% Full)
 Finished building: sizedummy
  
 
-10:55:17 Build Finished (took 599ms)
+12:08:23 Build Finished (took 648ms)
 
