@@ -11,6 +11,7 @@
 #include "../Divers/HAL/L298/L298_int.h"
 #include "../Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
 #include "../Divers/HAL/ULTRASONIC/ULTRASONIC_int.h"
+#include "../Divers/HAL/IR/IR_sensor.h"
 
 volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
 
@@ -22,9 +23,11 @@ ISR(USART_RXC_vect)
     {
         case 'A':
             g_mode = 1;
+            L298_vMove(MOVE_STOP, 0u);
             break;
         case 'M':
             g_mode = 0;
+            L298_vMove(MOVE_STOP, 0u);
             break;
         case 'F':
             if (g_mode == 0)
@@ -66,6 +69,7 @@ int main(void)
     BLUETOOTH_Init();
     L298_vInit();
     HULTRASONIC_vInit();
+    IR_Init();
     sei();
 
     L298_vMove(MOVE_STOP, 0u);
@@ -76,27 +80,28 @@ int main(void)
         {
             u16 distance = HULTRASONIC_u16GetDistance();
 
-            if (distance > 20u)
+            if (distance <= 20u && distance > 0u)
             {
-                L298_vMove(MOVE_FORWARD, 100u);
+                L298_vMove(MOVE_STOP, 0u);
             }
             else
             {
-                L298_vMove(MOVE_STOP, 0u);
-                _delay_ms(200);
-                L298_vMove(MOVE_BACKWARD, 80u);
-                _delay_ms(400);
-                L298_vMove(MOVE_LEFT, 80u);
-                _delay_ms(400);
-                L298_vMove(MOVE_STOP, 0u);
+                if (IR_IsBlackLine()) 
+                {
+                    L298_vMove(MOVE_LEFT, 60u);
+                }
+                else
+                {
+                    L298_vMove(MOVE_RIGHT, 60u);
+                }
             }
         }
         else
         {
-            L298_vMove(MOVE_STOP, 0u);
+            
         }
 
-        _delay_ms(50);
+        _delay_ms(10);
     }
 }
 
