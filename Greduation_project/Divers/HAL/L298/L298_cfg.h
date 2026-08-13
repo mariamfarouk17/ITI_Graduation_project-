@@ -14,6 +14,6 @@
 #define IN4   DIO_PIN6
 
 #define ENA   DIO_PIN3
-#define ENB   DIO_PIN2
+#define ENB   DIO_PIN7
 
 #endif /* DIVERS_HAL_L298_L298_CFG_H_ */

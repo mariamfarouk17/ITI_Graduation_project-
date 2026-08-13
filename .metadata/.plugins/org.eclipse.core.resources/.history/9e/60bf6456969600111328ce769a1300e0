@@ -1,0 +1,51 @@
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include "../Divers/MCAL/DIO/DIO_int.h"
+#include "../Divers/LIB/STD_TYPES.h"
+#include "../Divers/HAL/L298/L298_int.h"
+#include "../Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
+
+#define MANUAL_SPEED 60u
+
+ISR(USART_RXC_vect)
+{
+    u8 read = BLUETOOTH_Receive();
+
+    switch (read)
+    {
+        case 'F':
+            L298_vMove(MOVE_FORWARD, MANUAL_SPEED);
+            break;
+        case 'B':
+            L298_vMove(MOVE_BACKWARD, MANUAL_SPEED);
+            break;
+        case 'R':
+            L298_vMove(MOVE_RIGHT, MANUAL_SPEED);
+            break;
+        case 'L':
+            L298_vMove(MOVE_LEFT, MANUAL_SPEED);
+            break;
+        case 'S':
+            L298_vMove(MOVE_STOP, 0u);
+            break;
+        default:
+            break;
+    }
+}
+
+int main(void)
+{
+    BLUETOOTH_Init();
+    L298_vInit();
+    sei();
+
+    L298_vMove(MOVE_STOP, 0u);
+
+    while (1)
+    {
+        /* Everything is handled in the Bluetooth RX ISR */
+    }
+
+    return 0;
+}

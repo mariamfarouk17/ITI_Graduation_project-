@@ -1,0 +1,117 @@
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include "../Divers/MCAL/DIO/DIO_int.h"
+#include "../Divers/LIB/STD_TYPES.h"
+#include "../Divers/HAL/L298/L298_int.h"
+#include "../Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
+#include "../Divers/HAL/ULTRASONIC/ULTRASONIC_int.h"
+#include "../Divers/HAL/IR/IR_int.h"
+
+/* Define your two IR sensor pins here */
+#define IR_LEFT_PORT   DIO_PORTA
+#define IR_LEFT_PIN    DIO_PIN1
+
+#define IR_RIGHT_PORT  DIO_PORTA
+#define IR_RIGHT_PIN   DIO_PIN0
+
+volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
+
+#define MANUAL_SPEED 60u
+#define AUTO_SPEED   60u
+
+ISR(USART_RXC_vect)
+{
+    u8 read = BLUETOOTH_Receive();
+
+    switch (read)
+    {
+        case 'A':
+            g_mode = 1;
+            L298_vMove(MOVE_STOP, 0u);
+            break;
+        case 'M':
+            g_mode = 0;
+            L298_vMove(MOVE_STOP, 0u);
+            break;
+        case 'F':
+            if (g_mode == 0) L298_vMove(MOVE_FORWARD, MANUAL_SPEED);
+            break;
+        case 'B':
+            if (g_mode == 0) L298_vMove(MOVE_BACKWARD, MANUAL_SPEED);
+            break;
+        case 'R':
+            if (g_mode == 0) L298_vMove(MOVE_RIGHT, MANUAL_SPEED);
+            break;
+        case 'L':
+            if (g_mode == 0) L298_vMove(MOVE_LEFT, MANUAL_SPEED);
+            break;
+        case 'S':
+            if (g_mode == 0) L298_vMove(MOVE_STOP, 0u);
+            break;
+        default:
+            break;
+    }
+}
+
+static void LineFollow_vUpdate(void)
+{
+    u8 left  = IR_IsBlackLine(IR_LEFT_PORT, IR_LEFT_PIN);
+    u8 right = IR_IsBlackLine(IR_RIGHT_PORT, IR_RIGHT_PIN);
+
+    if (left == 0u && right == 0u)
+    {
+
+        L298_vMove(MOVE_STOP, 60u);
+    }
+    else if (left == 1u && right == 0u)
+    {
+        /* Left sensor sees black -> drifted right, correct left */
+        L298_vMove(MOVE_LEFT, 60u);
+    }
+    else if (left == 0u && right == 1u)
+    {
+        /* Right sensor sees black -> drifted left, correct right */
+        L298_vMove(MOVE_RIGHT, 60u);
+    }
+    else /* left == 1 && right == 1 */
+    {
+        /* Both sensors see black -> stop or go straight */
+        L298_vMove(MOVE_FORWARD, 0u);
+    }
+}
+
+int main(void)
+{
+    BLUETOOTH_Init();
+    L298_vInit();
+    HULTRASONIC_vInit();
+    IR_Init(IR_LEFT_PORT, IR_LEFT_PIN);
+    IR_Init(IR_RIGHT_PORT, IR_RIGHT_PIN);
+    sei();
+
+    L298_vMove(MOVE_STOP, 0u);
+
+    while (1)
+    {
+        if (g_mode == 1)
+        {
+            u16 distance = HULTRASONIC_u16GetDistance();
+
+            if (distance <= 20u && distance > 0u)
+            {
+                L298_vMove(MOVE_STOP, 0u);
+            }
+            else
+            {
+                LineFollow_vUpdate();
+            }
+        }
+        else
+        {
+            /* Manual mode handled entirely in ISR */
+        }
+
+        _delay_ms(10);
+    }
+}

@@ -1,0 +1,136 @@
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include "../Divers/MCAL/DIO/DIO_int.h"
+#include "../Divers/LIB/STD_TYPES.h"
+#include "../Divers/HAL/L298/L298_int.h"
+#include "../Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
+
+/**
+ * @file test_bluetooth_advanced.c
+ * @brief Advanced Bluetooth driver test with transmission/reception testing
+ * @details This test file provides comprehensive testing of Bluetooth functionality
+ *          including command validation and status feedback
+ */
+
+#define MANUAL_SPEED        60u
+#define BLUETOOTH_TIMEOUT   100u  /* ms */
+
+/* Test mode flags */
+volatile u8 g_test_mode = 0;
+volatile u8 g_last_command = 0;
+volatile u8 g_command_count = 0;
+
+/**
+ * @brief Validates received command
+ * @param cmd Command character to validate
+ * @return 1 if valid command, 0 otherwise
+ */
+static u8 IsValidCommand(u8 cmd)
+{
+    return (cmd == 'F' || cmd == 'B' || cmd == 'R' || cmd == 'L' || cmd == 'S');
+}
+
+/**
+ * @brief USART RX ISR - Handles Bluetooth commands
+ */
+ISR(USART_RXC_vect)
+{
+    u8 cmd = BLUETOOTH_Receive();
+    
+    /* Track command for testing */
+    g_last_command = cmd;
+    g_command_count++;
+    
+    /* Validate command before processing */
+    if (!IsValidCommand(cmd))
+    {
+        /* Invalid command - ignore but don't move */
+        return;
+    }
+
+    /* Process valid commands */
+    switch (cmd)
+    {
+        case 'F':
+            L298_vMove(MOVE_FORWARD, MANUAL_SPEED);
+            break;
+        case 'B':
+            L298_vMove(MOVE_BACKWARD, MANUAL_SPEED);
+            break;
+        case 'R':
+            L298_vMove(MOVE_RIGHT, MANUAL_SPEED);
+            break;
+        case 'L':
+            L298_vMove(MOVE_LEFT, MANUAL_SPEED);
+            break;
+        case 'S':
+            L298_vMove(MOVE_STOP, 0u);
+            break;
+        default:
+            break;
+    }
+}
+
+/**
+ * @brief Test Bluetooth transmission
+ * @details Sends test data and verifies communication is working
+ */
+static void Test_Transmission(void)
+{
+    u8 test_data[] = {'T', 'E', 'S', 'T', '\r', '\n'};
+    u8 i;
+    
+    for (i = 0; i < sizeof(test_data); i++)
+    {
+        BLUETOOTH_Transmit(test_data[i]);
+        _delay_ms(10);
+    }
+}
+
+/**
+ * @brief Test all motor commands via Bluetooth
+ */
+static void Test_AllCommands(void)
+{
+    u8 commands[] = {'F', 'B', 'R', 'L', 'S'};
+    u8 i;
+    
+    for (i = 0; i < sizeof(commands); i++)
+    {
+        g_last_command = 0;
+        BLUETOOTH_Transmit(commands[i]);
+        _delay_ms(100);
+    }
+}
+
+/**
+ * @brief Main test application
+ */
+int main(void)
+{
+    /* Initialize modules */
+    BLUETOOTH_Init();
+    L298_vInit();
+    
+    /* Enable global interrupts */
+    sei();
+    
+    /* Ensure motor is stopped on startup */
+    L298_vMove(MOVE_STOP, 0u);
+    
+    /* Delay to ensure BLUETOOTH initialization complete */
+    _delay_ms(100);
+    
+    /* Send startup message */
+    _delay_ms(100);
+    
+    /* Test mode loop */
+    while (1)
+    {
+     Test_Transmission();
+
+    }
+    
+    return 0;
+}

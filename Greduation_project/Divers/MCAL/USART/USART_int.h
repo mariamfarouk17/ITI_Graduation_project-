@@ -5,6 +5,6 @@
 void MUSART_vInit(void);
 void MUSART_vTransmit(u8 A_u8Byte);
 u8 MUSART_vReceive(void);
-
+u8 MUSART_u8ReceiveStatus(void);
 
 #endif

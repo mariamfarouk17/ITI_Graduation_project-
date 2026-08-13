@@ -1,0 +1,74 @@
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#include <util/delay.h>
+#include "../Divers/MCAL/DIO/DIO_int.h"
+#include "../Divers/LIB/STD_TYPES.h"
+#include "../Divers/HAL/L298/L298_int.h"
+#include "../Divers/HAL/BLUETOOTH/BLUETOOTH_int.h"
+
+#define MANUAL_SPEED 60u
+
+/**
+ * @brief USART RX Interrupt Service Routine for Bluetooth control
+ * @details Handles incoming Bluetooth commands and controls motor movement
+ * 
+ * Commands:
+ * - 'F': Move Forward
+ * - 'B': Move Backward
+ * - 'R': Turn Right
+ * - 'L': Turn Left
+ * - 'S': Stop
+ * - Others: Ignored
+ */
+ISR(USART_RXC_vect)
+{
+    u8 read = BLUETOOTH_Receive();
+
+    switch (read)
+    {
+        case 'F':
+            L298_vMove(MOVE_FORWARD, MANUAL_SPEED);
+            break;
+        case 'B':
+            L298_vMove(MOVE_BACKWARD, MANUAL_SPEED);
+            break;
+        case 'R':
+            L298_vMove(MOVE_RIGHT, MANUAL_SPEED);
+            break;
+        case 'L':
+            L298_vMove(MOVE_LEFT, MANUAL_SPEED);
+            break;
+        case 'S':
+            L298_vMove(MOVE_STOP, 0u);
+            break;
+        default:
+            /* Invalid command - ignore silently */
+            break;
+    }
+}
+
+/**
+ * @brief Main application entry point
+ * @details Initializes Bluetooth and Motor control, then waits for Bluetooth commands
+ * @return Should not return in normal operation
+ */
+int main(void)
+{
+    /* Initialize modules */
+    BLUETOOTH_Init();
+    L298_vInit();
+    
+    /* Enable global interrupts (required for USART RX interrupt) */
+    sei();
+
+    /* Ensure motor is stopped on startup */
+    L298_vMove(MOVE_STOP, 0u);
+
+    /* Main loop - all control handled by Bluetooth RX ISR */
+    while (1)
+    {
+        /* Everything is handled in the Bluetooth RX ISR */
+    }
+
+    return 0;
+}

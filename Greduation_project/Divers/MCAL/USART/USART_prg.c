@@ -76,3 +76,7 @@ u8 MUSART_vReceive(void)
 	/* Get and return received data from buffer */
 	return UDR;
 }
+u8 MUSART_u8ReceiveStatus(void)
+{
+    return GET_BIT(UCSRA, 7);
+}

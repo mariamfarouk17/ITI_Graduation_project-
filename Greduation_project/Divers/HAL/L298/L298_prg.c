@@ -18,7 +18,7 @@ void L298_vInit(void)
     MDIO_vSetPinDir(DIO_PORTB, IN3, DIO_OUTPUT);
     MDIO_vSetPinDir(DIO_PORTB, IN4, DIO_OUTPUT);
 
-    MDIO_vSetPinDir(DIO_PORTA, ENA, DIO_OUTPUT);
+    MDIO_vSetPinDir(DIO_PORTB, ENA, DIO_OUTPUT);
     MDIO_vSetPinDir(DIO_PORTB, ENB, DIO_OUTPUT);
 
     MTIMERS_vInit();
@@ -78,12 +78,12 @@ void L298_vMove(u8 Copy_u8Direction, u8 Copy_u8Speed)
     if (Copy_u8Direction == MOVE_STOP)
     {
         MDIO_vSetPinVal(DIO_PORTB, ENA, DIO_LOW);
-        MDIO_vSetPinVal(DIO_PORTB, ENB, DIO_LOW);
+        MDIO_vSetPinVal(DIO_PORTD, ENB, DIO_LOW);
     }
     else
     {
         MDIO_vSetPinVal(DIO_PORTB, ENA, DIO_HIGH);
-        MDIO_vSetPinVal(DIO_PORTB, ENB, DIO_HIGH);
+        MDIO_vSetPinVal(DIO_PORTD, ENB, DIO_HIGH);
 
         if (Copy_u8Speed < 100u)
         {

@@ -8,6 +8,12 @@
 #include "../Divers/HAL/ULTRASONIC/ULTRASONIC_int.h"
 #include "../Divers/HAL/IR/IR_int.h"
 
+/**
+ * @file main.c
+ * @brief Autonomous Driving System with Bluetooth Remote Control
+ * @details Supports dual-mode operation: Autonomous (sensor-based) and Manual (Bluetooth control)
+ */
+
 /* Define your two IR sensor pins here */
 #define IR_LEFT_PORT   DIO_PORTA
 #define IR_LEFT_PIN    DIO_PIN1
@@ -15,45 +21,92 @@
 #define IR_RIGHT_PORT  DIO_PORTA
 #define IR_RIGHT_PIN   DIO_PIN0
 
-volatile u8 g_mode = 1; // 1 = Auto, 0 = Manual
+/* Operation modes */
+#define MODE_AUTONOMOUS 1u
+#define MODE_MANUAL     0u
 
-#define MANUAL_SPEED 60u
-#define AUTO_SPEED   60u
+volatile u8 g_mode = MODE_AUTONOMOUS;  /* Default: Autonomous mode */
 
+#define MANUAL_SPEED       60u
+#define AUTO_SPEED         60u
+#define COLLISION_DISTANCE 20u
+
+/**
+ * @brief USART RX ISR - Handles Bluetooth commands for mode switching and manual control
+ * @details Processes incoming Bluetooth commands via new BLUETOOTH_Receive() driver
+ * 
+ * Commands:
+ * - 'A': Switch to Autonomous mode
+ * - 'M': Switch to Manual mode
+ * - 'F': Forward (Manual mode only)
+ * - 'B': Backward (Manual mode only)
+ * - 'R': Right Turn (Manual mode only)
+ * - 'L': Left Turn (Manual mode only)
+ * - 'S': Stop (Manual mode only)
+ */
 ISR(USART_RXC_vect)
 {
-    u8 read = BLUETOOTH_Receive();
+    u8 cmd = HBLUETOOTH_u8ReceiveChar();  /* Uses new BLUETOOTH_Receive() driver */
 
-    switch (read)
+    switch (cmd)
     {
         case 'A':
-            g_mode = 1;
+            /* Switch to Autonomous mode */
+            g_mode = MODE_AUTONOMOUS;
             L298_vMove(MOVE_STOP, 0u);
             break;
+            
         case 'M':
-            g_mode = 0;
+            /* Switch to Manual mode */
+            g_mode = MODE_MANUAL;
             L298_vMove(MOVE_STOP, 0u);
             break;
+            
         case 'F':
-            if (g_mode == 0) L298_vMove(MOVE_FORWARD, MANUAL_SPEED);
+            /* Forward - Manual mode only */
+            if (g_mode == MODE_MANUAL)
+                L298_vMove(MOVE_FORWARD, MANUAL_SPEED);
             break;
+            
         case 'B':
-            if (g_mode == 0) L298_vMove(MOVE_BACKWARD, MANUAL_SPEED);
+            /* Backward - Manual mode only */
+            if (g_mode == MODE_MANUAL)
+                L298_vMove(MOVE_BACKWARD, MANUAL_SPEED);
             break;
+            
         case 'R':
-            if (g_mode == 0) L298_vMove(MOVE_RIGHT, MANUAL_SPEED);
+            /* Right Turn - Manual mode only */
+            if (g_mode == MODE_MANUAL)
+                L298_vMove(MOVE_RIGHT, MANUAL_SPEED);
             break;
+            
         case 'L':
-            if (g_mode == 0) L298_vMove(MOVE_LEFT, MANUAL_SPEED);
+            /* Left Turn - Manual mode only */
+            if (g_mode == MODE_MANUAL)
+                L298_vMove(MOVE_LEFT, MANUAL_SPEED);
             break;
+            
         case 'S':
-            if (g_mode == 0) L298_vMove(MOVE_STOP, 0u);
+            /* Stop - Manual mode only */
+            if (g_mode == MODE_MANUAL)
+                L298_vMove(MOVE_STOP, 0u);
             break;
+            
         default:
+            /* Invalid command - ignore silently */
             break;
     }
 }
 
+
+/**
+ * @brief Update line following logic based on IR sensor readings
+ * @details Reads both IR sensors and adjusts motor direction to stay on the line
+ * 
+ * Sensor Behavior:
+ * - 0: White (no line detected)
+ * - 1: Black (line detected)
+ */
 static void LineFollow_vUpdate(void)
 {
     u8 left  = IR_IsBlackLine(IR_LEFT_PORT, IR_LEFT_PIN);
@@ -61,57 +114,74 @@ static void LineFollow_vUpdate(void)
 
     if (left == 0u && right == 0u)
     {
-       
-        L298_vMove(MOVE_STOP, 60u);
+        /* Both sensors off line - STOP (safety) */
+        L298_vMove(MOVE_STOP, 0u);
     }
     else if (left == 1u && right == 0u)
     {
-        /* Left sensor sees black -> drifted right, correct left */
-        L298_vMove(MOVE_LEFT, 60u);
+        /* Left sensor on line, Right off -> drifted right, turn left */
+        L298_vMove(MOVE_LEFT, AUTO_SPEED);
     }
     else if (left == 0u && right == 1u)
     {
-        /* Right sensor sees black -> drifted left, correct right */
-        L298_vMove(MOVE_RIGHT, 60u);
+        /* Right sensor on line, Left off -> drifted left, turn right */
+        L298_vMove(MOVE_RIGHT, AUTO_SPEED);
     }
     else /* left == 1 && right == 1 */
     {
-        /* Both sensors see black -> stop or go straight */
-        L298_vMove(MOVE_FORWARD, 0u);
+        /* Both sensors on line -> go straight */
+        L298_vMove(MOVE_FORWARD, AUTO_SPEED);
     }
 }
 
+/**
+ * @brief Main application entry point
+ * @details Initializes all modules and enters dual-mode operation loop
+ */
 int main(void)
 {
-    BLUETOOTH_Init();
-    L298_vInit();
-    HULTRASONIC_vInit();
-    IR_Init(IR_LEFT_PORT, IR_LEFT_PIN);
-    IR_Init(IR_RIGHT_PORT, IR_RIGHT_PIN);
+    /* ===== Module Initialization ===== */
+	HBLUETOOTH_vINIT();              /* Initialize Bluetooth via new driver */
+    L298_vInit();                  /* Initialize motor driver */
+    HULTRASONIC_vInit();           /* Initialize ultrasonic sensor */
+    IR_Init(IR_LEFT_PORT, IR_LEFT_PIN);   /* Initialize left IR sensor */
+    IR_Init(IR_RIGHT_PORT, IR_RIGHT_PIN); /* Initialize right IR sensor */
+    
+    /* Enable global interrupts (CRITICAL for Bluetooth RX ISR) */
     sei();
 
+    /* Ensure motor is stopped on startup */
     L298_vMove(MOVE_STOP, 0u);
+    _delay_ms(100);  /* Allow initialization to complete */
 
+    /* ===== Main Operation Loop ===== */
     while (1)
     {
-        if (g_mode == 1)
+        if (g_mode == MODE_AUTONOMOUS)
         {
+            /* Autonomous Mode: Sensor-based navigation */
             u16 distance = HULTRASONIC_u16GetDistance();
 
-            if (distance <= 20u && distance > 0u)
+            /* Collision Detection: Stop if object too close */
+            if (distance <= COLLISION_DISTANCE && distance > 0u)
             {
                 L298_vMove(MOVE_STOP, 0u);
             }
             else
             {
+                /* No collision, follow the line */
                 LineFollow_vUpdate();
             }
         }
         else
         {
-            /* Manual mode handled entirely in ISR */
+            /* Manual Mode: All control via Bluetooth commands in ISR */
+            /* No action needed here - ISR handles all commands */
         }
 
+        /* Main loop period */
         _delay_ms(10);
     }
+
+    return 0;
 }
